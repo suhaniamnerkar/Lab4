@@ -2,72 +2,100 @@
 #include<stdlib.h>
 struct node{
         int a;
-        struct node*abc;
+        struct node*next;
     };
+
+struct node*create_node(int data){
+    struct node*cnode=(struct node*)malloc(sizeof(cnode));
+    cnode->a=data;
+    cnode->next=NULL;
+    return cnode;
+}
+
+struct node*input(int data,struct node*head){
+    struct node*nnode=create_node(data);
+    if(head==NULL){
+        head=nnode;
+        return head;
+    }
+    struct node*temp=head;
+    while(temp->next!=NULL){
+        temp=temp->next;
+    }
+    temp->next=nnode;
+    return head;
+}
+
 void display(struct node*ptr){
     while(ptr!=NULL){
-        printf("Element: %d\n",ptr->a);
-        ptr=ptr->abc;
+        printf("%d\n",ptr->a);
+        ptr=ptr->next;
     }
 }
 
-struct node*insertatfirst(struct node*head,int data){
-    struct node*ptr=(struct node*)malloc(sizeof(struct node));
-    ptr->abc=head;
-    ptr->a=data;
-    head=ptr; 
-    return ptr;
+struct node*insert_at_first(int data1,struct node*head){
+    struct node*nnode=(struct node*)malloc(sizeof(struct node*));
+    nnode->a=data1;
+    nnode->next=head;
+    head=nnode;
+    return head;
 }
 
-struct node*insertinbetween(struct node*head,int data,int n){
-    struct node*ptr=(struct node*)malloc(sizeof(struct node));
-    struct node*p=head;
-    ptr->a=data;
-    int i=1;
-    while(i<n){
-        p=p->abc;
-        i++;
+struct node*insert_in_between(int data1,struct node*head,int m){
+    struct node*nnode=(struct node*)malloc(sizeof(struct node*));
+    nnode->a=data1;
+    struct node*temp=head;
+    for(int i=0;i<m-2;i++){
+        temp=temp->next;
     }
-    ptr->abc=p->abc;
-    p->abc=ptr;
+    nnode->next=temp->next;
+    temp->next=nnode;
+    return head;
 }
 
-struct node*insertatlast(struct node*head,int data){
-    struct node*ptr=(struct node*)malloc(sizeof(struct node));
-    struct node*p=head;
-    int i=1;
-    while(p->abc!=0){
-        p=p->abc;
+struct node*insert_at_last(int data1,struct node*head){
+    struct node*nnode=(struct node*)malloc(sizeof(struct node*));
+    nnode->a=data1;
+    struct node*temp=head;
+    while(temp->next!=NULL){
+        temp=temp->next;
     }
-    p->abc=ptr;
-    p->a=data;
+    temp->next=nnode;
+    nnode->next=NULL;
+    return head;
 }
+
 
 int main(){
-    
-    struct node*head;
-    struct node*first;
-    struct node*second;
-    head=(struct node*)malloc(sizeof(struct node*));
-    first=(struct node*)malloc(sizeof(struct node*));
-    second=(struct node*)malloc(sizeof(struct node*));
-
-    head->a=7;
-    head->abc=first; 
-    first->a=8;
-    first->abc=second;
-    second->a=9;
-    second->abc=NULL;
     int n;
-    display(head);
-    head=insertatfirst(head,6);
-    display(head);
-    printf("Enter the index of inserting new element");
+    struct node*nnode,*head;
+    head=NULL;
+    int data;
+    printf("Enter the number of elements you want to enter");
     scanf("%d",&n);
-    insertinbetween(head,5,n);
+    for(int i=0;i<n;i++){
+        scanf("%d",&data);
+        head=input(data,head);
+    }
+
     display(head);
-    insertatlast(head,10);
-    display(head);
+    int m,data1;
+    printf("Enter the position at which you want to enter the element");
+    scanf("%d",&m);
+    printf("Enter the element");
+    scanf("%d",&data1);
+    if(m==1){
+        head=insert_at_first(data1,head);
+        display(head);
+    }
+    else if(m>1 && m<=n){
+        head=insert_in_between(data1,head,m);
+        display(head);
+    }
+    else if(m>n){
+        head=insert_at_last(data1,head);
+        display(head);
+    }    
 
     return 0;
 }
